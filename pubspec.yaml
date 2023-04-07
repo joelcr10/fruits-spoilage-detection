@@ -41,6 +41,11 @@ dependencies:
   page_transition: ^2.0.9
   image_picker: ^0.8.7+1
   path_provider: ^2.0.14
+  firebase_core: ^2.9.0
+  cloud_firestore: ^4.5.0
+  flutter_login: ^4.1.1
+  firebase_auth: ^4.4.0
+  get: ^4.6.5
 
 dev_dependencies:
   flutter_test:
@@ -70,6 +75,9 @@ flutter:
     - assets/images/apples.jpg
     - assets/images/banana.jpg
     - assets/images/oranges.jpg
+    - assets/images/Diet-amico.png
+    - assets/images/Diet-cuate.png
+    - assets/images/grocery2.png
 #    - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

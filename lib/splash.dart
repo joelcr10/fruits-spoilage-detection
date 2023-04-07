@@ -1,53 +1,48 @@
+  import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:page_transition/page_transition.dart';
 
 import 'home.dart';
+import 'login.dart';
+import 'signup.dart';
 
-// class Splash extends StatefulWidget{
-//   const Splash({Key? key}): super(key:key);
-//   @override
-//   _SplashState createState() => _SplashState();
-// }
-// class _SplashState extends State<Splash>{
-//
-//   @override
-//   void initState(){
-//     super.initState();
-//     _navigateHome();
-//   }
-//
-//   _navigateHome() async{
-//       await Future.delayed(Duration(milliseconds: 1500),(){});
-//       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> MyHomePage(title: 'Home')));
-//   }
-//
-//   @override
-//   Widget build(BuildContext context){
-//     return Scaffold(
-//       body: Center(
-//         child: Container(
-//           child: Text(
-//             'Splash Screen',
-//             style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
 
 
 class Splash extends StatelessWidget {
+
+  Future<FirebaseApp> _initializeFirebase() async{
+    FirebaseApp firebaseApp = await Firebase.initializeApp();
+    return firebaseApp;
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'Freshness Detection',
         home: AnimatedSplashScreen(
             duration: 3000,
+
             // splash: Icons.shopping_basket,
-            splash: Icons.shopping_basket_rounded,
-            nextScreen: MyHomePage(title: 'home'),
+            splash: Image.asset(
+              'assets/images/Diet-amico.png',
+              width: 400,
+              height: 900,
+              fit: BoxFit.fitHeight,
+            ),
+            // nextScreen: MyHomePage(title: 'home'),
+            nextScreen: FutureBuilder(
+                future: _initializeFirebase(),
+                builder: (context, snapshot){
+                  if(snapshot.connectionState == ConnectionState.done){
+                    // return MyHomePage(title: 'home');
+                    return Scaffold(
+                        body: SignUpScreen()
+                    );
+                  }
+
+                  return const Center(child: CircularProgressIndicator(),);
+                },
+            ),
             splashTransition: SplashTransition.fadeTransition,
             // pageTransitionType: PageTransitionType.scale,
             backgroundColor: Colors.green));

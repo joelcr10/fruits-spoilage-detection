@@ -19,6 +19,7 @@ class RottingFruitsState extends State<RottingFruits>{
                 height: 170,
                 alignment: Alignment.center,
                 child: Card(
+
                   margin: const EdgeInsets.all(10),
                   elevation: 10,
                   clipBehavior: Clip.antiAliasWithSaveLayer,

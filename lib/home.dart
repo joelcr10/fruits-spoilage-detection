@@ -1,17 +1,35 @@
+//imported packages
 import 'dart:typed_data';
-
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 import 'dart:io';
+import 'package:get/get.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+//imported files
 import 'package:fruits/fresh.dart';
 import 'package:fruits/rotting.dart';
 import 'package:fruits/spoiled.dart';
 import 'All.dart';
+import 'login.dart';
+import 'authentication_repository.dart';
+import 'welcome.dart';
+
+final db = FirebaseFirestore.instance;
+String userEmail='anonymous';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
+  const MyHomePage({super.key});
+  // final String title;
+  void initState(){
+    userEmail = Get.arguments[0];
+    print('inside home $userEmail');
+  }
+
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -20,7 +38,14 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Uint8List? imageFileUint8List;
-  CameraButton() async{
+
+
+
+
+  //----------------- CAMERA FUNCTION ---------------------------------
+
+  Future<void> CameraButton() async{
+
     try{
       final pickedImage = await ImagePicker().pickImage(source: ImageSource.camera);
 
@@ -40,6 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
         imageFileUint8List = null;
       });
     }
+
   }
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -54,7 +80,44 @@ class _MyHomePageState extends State<MyHomePage> {
                 bottomLeft: Radius.circular(25)),
           ),
 
-          title: const Text('Fruit Freshness Detection'),
+          // title: const Text('Fruit Freshness Detection'),
+          title: RichText(
+            text: TextSpan(
+                children: [
+                  const TextSpan (
+                      text: 'Name : ',     //TODO: pass value of user to home screen
+                      style:  TextStyle(
+                        color: Colors.white,
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w500,
+                      )
+                  ),
+                  TextSpan (
+                    text: "Logout",
+                    style: const TextStyle(
+                      color: Colors.blue,
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    recognizer: TapGestureRecognizer()..onTap=() async{
+                      print('pressed sign up button in dont have an account');
+                      // Get.offAll(()=>LoginPage());
+
+
+                      // AuthenticationRepository.instance._setInitialScreen(null);
+                      await FirebaseAuth.instance.signOut();
+                      Navigator.of(context)
+                          .pushAndRemoveUntil(
+                        CupertinoPageRoute(
+                            builder: (context) => WelcomeScreen()
+                        ),
+                            (_) => false,
+                      );
+                    },
+                  ),
+                ]
+            ),
+          ),
           bottom: TabBar(
             indicatorColor: Colors.white,
             labelColor: Colors.white,

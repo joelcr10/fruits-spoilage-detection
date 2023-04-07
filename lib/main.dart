@@ -1,16 +1,22 @@
+
+//packages import
 import 'package:flutter/material.dart';
-import 'package:fruits/fresh.dart';
-import 'package:fruits/rotting.dart';
-import 'package:fruits/spoiled.dart';
-import 'All.dart';
-import 'home.dart';
+
+//firebase import
+import 'package:fruits/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:get/get.dart';
+
+//files import
 import 'splash.dart';
+import 'login.dart';
+import 'authentication_repository.dart';
 
 
-
-import 'package:camera/camera.dart';
-
-void main() {
+Future<void> main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform).then((value) => Get.put(AuthenticationRepository()));
   runApp(const MyApp());
 }
 
@@ -19,9 +25,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'eFresh',
       home: Splash(),
+
     );
   }
 }
