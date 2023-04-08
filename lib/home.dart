@@ -18,6 +18,7 @@ import 'All.dart';
 import 'login.dart';
 import 'authentication_repository.dart';
 import 'welcome.dart';
+import 'drawerWidget.dart';
 
 final db = FirebaseFirestore.instance;
 String userEmail='anonymous';
@@ -73,52 +74,16 @@ class _MyHomePageState extends State<MyHomePage> {
       length: 4,
       child: Scaffold(
         appBar: AppBar(
+
           backgroundColor: Colors.green,
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 bottomRight: Radius.circular(25),
                 bottomLeft: Radius.circular(25)),
           ),
-
           // title: const Text('Fruit Freshness Detection'),
-          title: RichText(
-            text: TextSpan(
-                children: [
-                  const TextSpan (
-                      text: 'Name : ',     //TODO: pass value of user to home screen
-                      style:  TextStyle(
-                        color: Colors.white,
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w500,
-                      )
-                  ),
-                  TextSpan (
-                    text: "Logout",
-                    style: const TextStyle(
-                      color: Colors.blue,
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    recognizer: TapGestureRecognizer()..onTap=() async{
-                      print('pressed sign up button in dont have an account');
-                      // Get.offAll(()=>LoginPage());
-
-
-                      // AuthenticationRepository.instance._setInitialScreen(null);
-                      await FirebaseAuth.instance.signOut();
-                      Navigator.of(context)
-                          .pushAndRemoveUntil(
-                        CupertinoPageRoute(
-                            builder: (context) => WelcomeScreen()
-                        ),
-                            (_) => false,
-                      );
-                    },
-                  ),
-                ]
-            ),
-          ),
-          bottom: TabBar(
+          title: const  Text('Fruit Freshness detection'),
+          bottom: const TabBar(
             indicatorColor: Colors.white,
             labelColor: Colors.white,
             tabs: <Widget>[
@@ -158,6 +123,8 @@ class _MyHomePageState extends State<MyHomePage> {
           backgroundColor: Colors.green,
           child: const Icon(Icons.camera_alt),
         ),
+
+        drawer: SideDrawer(),
       ),
     );
   }

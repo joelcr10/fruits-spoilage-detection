@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import 'ApplePage.dart';
 
 class AllFruits extends StatefulWidget{
   const AllFruits({super.key});
@@ -20,56 +23,61 @@ class AllFruitsState extends State<AllFruits>{
               Container(
                 height: 170,
                 alignment: Alignment.center,
-                child: Card(
-                  margin: const EdgeInsets.all(10),
-                  elevation: 10,
-                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  child: Stack(
-                    children: [
-                      Image.asset(
-                        'assets/images/apples.jpg',
-                        fit: BoxFit.fitWidth,
-                        width: 400,
-                        // height: 500,
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [Colors.transparent, Colors.black87],
-                          ),
+                child: GestureDetector(
+                  onTap: (){
+                    Get.to(()=>ApplePage());
+                  },
+                  child: Card(
+                    margin: const EdgeInsets.all(10),
+                    elevation: 10,
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    child: Stack(
+                      children: [
+                        Image.asset(
+                          'assets/images/apples.jpg',
+                          fit: BoxFit.fitWidth,
+                          width: 400,
+                          // height: 500,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [Colors.transparent, Colors.black87],
+                            ),
 
+                          ),
                         ),
-                      ),
-                      Positioned(
-                        bottom: 10,
-                        left: 10,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'APPLES',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold,
+                        Positioned(
+                          bottom: 10,
+                          left: 10,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'APPLES',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                            Text(
-                              'Location of apple',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
+                              Text(
+                                'Location of apple',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
 

@@ -78,6 +78,10 @@ flutter:
     - assets/images/Diet-amico.png
     - assets/images/Diet-cuate.png
     - assets/images/grocery2.png
+    - assets/images/ethylene.png
+    - assets/images/co.png
+    - assets/images/moisture.png
+    - assets/images/smoke.png
 #    - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
