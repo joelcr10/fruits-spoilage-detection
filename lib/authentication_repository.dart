@@ -4,9 +4,11 @@ import 'package:fruits/home.dart';
 import 'package:fruits/signup_email_password_failure.dart';
 import 'package:fruits/welcome.dart';
 import 'package:get/get.dart';
-import 'splash.dart';
-import 'signup.dart';
-import 'login.dart';
+// import 'splash.dart';
+// import 'signup.dart';
+// import 'login.dart';
+import 'currentUser.dart';
+import 'globalVariables.dart' as global;
 
 String? currentUser='anonymous';
 
@@ -24,7 +26,18 @@ class AuthenticationRepository extends GetxController {
   }
 
   _setInitialScreen(User? user) {
+    print('inside initial screen $user');
     user == null ? Get.offAll(() => WelcomeScreen()) : Get.offAll(() => const MyHomePage());
+
+    if(user==null){
+      Get.offAll(() => WelcomeScreen());
+    }
+    else{
+      CurrentUser currentUser = CurrentUser();
+      currentUser.setCurrentUserId = user.uid;
+      print('current user (auth screen) : ${global.currentUser}');
+      Get.offAll(() => const MyHomePage());
+    }
   }
 
   Future<void> createUserWithEmailAndPassword(String email,String password) async {
@@ -35,6 +48,15 @@ class AuthenticationRepository extends GetxController {
       print('FIREBASE USER VALUE = ${firebaseUser.value}');
       // firebaseUser.value != null ? Get.offAll(() => MyHomePage(title: 'home')) : Get.to(()=>SignUpScreen());
       firebaseUser.value != null ? Get.offAll(() => MyHomePage()) : Get.to(()=>WelcomeScreen());
+
+      if(firebaseUser.value!= null){
+        global.currentUser = FirebaseAuth.instance.currentUser!.uid;
+        print('sign up form : ${global.currentUser}');
+        Get.offAll(() => MyHomePage());
+      }
+      else{
+        Get.to(()=>WelcomeScreen());
+      }
 
 
     } on FirebaseAuthException catch (e) {
@@ -53,10 +75,11 @@ class AuthenticationRepository extends GetxController {
     print('inside sign in function $email $password');
     try {
       UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
-      print('sign in info: ${userCredential.user?.email}');
+      // print('sign in info: ${userCredential.user?.email}');
+      // print('sign in id: ${userCredential.user?.uid}');
 
-      currentUser = userCredential.user?.email;
-
+      global.currentUser = userCredential.user!.uid;
+      print('sign in form: ${global.currentUser}');
       //TODO if user already logged in redirect to home page else redirect to welcome page
       Get.to(()=>MyHomePage(),arguments: [currentUser]);
 

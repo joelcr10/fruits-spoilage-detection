@@ -1,4 +1,5 @@
 //imported packages
+import 'dart:ffi';
 import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -19,18 +20,21 @@ import 'login.dart';
 import 'authentication_repository.dart';
 import 'welcome.dart';
 import 'drawerWidget.dart';
+import 'currentUser.dart';
+import 'globalVariables.dart' as global;
 
 final db = FirebaseFirestore.instance;
 String userEmail='anonymous';
+String currentUser = global.currentUser;
+
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
   // final String title;
-  void initState(){
-    userEmail = Get.arguments[0];
-    print('inside home $userEmail');
-  }
+  void initState() {
 
+
+  }
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -40,12 +44,11 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Uint8List? imageFileUint8List;
 
-
-
-
   //----------------- CAMERA FUNCTION ---------------------------------
 
   Future<void> CameraButton() async{
+
+    print('home camera button: ${global.currentUser}');
 
     try{
       final pickedImage = await ImagePicker().pickImage(source: ImageSource.camera);

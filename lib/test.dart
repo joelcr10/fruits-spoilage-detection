@@ -1,113 +1,599 @@
+
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
-import 'package:fruits/Controller/signup_controller.dart';
-import 'home.dart';
+import 'package:fruits/Controller/dataController.dart';
+import 'globalVariables.dart' as global;
+
+final userDoc = FirebaseFirestore.instance.collection("Users");
+String ethylene = 'NaN';
+String methane = 'NaN';
+String carbonMono = 'NaN';
+String moisture = 'NaN';
+
+final goodConditionColor = 0xffFFFFFF;
+final badConditionColor = 0xffFF9699;
+
+var ethyleneColor = goodConditionColor;
+var methaneColor = goodConditionColor;
+var moistureColor = goodConditionColor;
+var carbonMonoColor = goodConditionColor;
 
 
+class RefreshData extends StatefulWidget{
 
-class SignUpScreen extends StatefulWidget{
-  const SignUpScreen({Key? key}) : super(key:key);
+  const RefreshData({super.key});
+  // final String title;
+  void initState() {
 
+  }
   @override
-  _SignUpScreenState createState() => _SignUpScreenState();
+  State<RefreshData> createState() => RefreshDataState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen>{
 
+class RefreshDataState extends State<RefreshData>{
+
+  void checkDB() async{
+
+    FirebaseFirestore.instance.collection('User').doc(global.currentUser).collection('Fruits').doc('Apple').get().then((doc){
+      ethylene = doc["Ethylene"];
+      double.parse(ethylene) < 20.59 ? ethyleneColor = goodConditionColor : ethyleneColor = badConditionColor;
+
+      methane = doc["Methane"];
+      double.parse(methane)<12.50? methaneColor = goodConditionColor : methaneColor = badConditionColor;
+
+      carbonMono = doc["Carbon Mono"];
+      double.parse(carbonMono)<07.51? carbonMonoColor = goodConditionColor : carbonMonoColor = badConditionColor;
+
+      moisture = doc["Moisture"];
+      double.parse(moisture)<35.87? moistureColor = goodConditionColor : moistureColor = badConditionColor;
+      setState(() {
+      });
+    });
+
+
+
+    // print('name: $name');
+  }
 
   @override
-  Widget build(BuildContext context){
-
-    final controller = Get.put(SignUpController());
-    final _formKey = GlobalKey<FormState>();
-
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        body: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "My App Title",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 28.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const Text(
-                "Sign Up to your app",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 44.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(
-                height: 44,
-              ),
-              TextField(
-                controller: controller.email,
-                keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
-
-                  hintText: "User email",
-                  prefixIcon: Icon(Icons.mail, color: Colors.black,),
-                ),
-              ),
-              const SizedBox(
-                height: 44,
-              ),
-              TextField(
-                controller: controller.password,
-                obscureText: true,
-                // keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
-                  hintText: "User password",
-                  prefixIcon: Icon(Icons.lock, color: Colors.black,),
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              const Text("Don't remember your Password?",
-                style: TextStyle(color: Colors.blue),
-              ),
-              const SizedBox(
-                height: 44,
-              ),
-
+              Text('refresh data'),
               Container(
-                width: double.infinity,
-                child: RawMaterialButton(
-                  fillColor: Colors.blue,
-                  onPressed: (){
-                    if(_formKey.currentState!.validate()){
-                      print('clicked sign up button');
-                      SignUpController.instance.registerUser(controller.email.text.trim(), controller.password.text.trim());
-                    }
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance.collection("Users").doc('EWJrHpGXFvb2Zi09W3HJId3ssFu2').collection('Fruits').snapshots(),
+                  builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
+                      if(snapshot.connectionState == ConnectionState.none){
+                        return Center(
+                          child: CircularProgressIndicator(
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                      }
+                      else {
+                        String eth = '';
+
+                        checkDB();
+                        return Column(
+                          children: [
+                            const SizedBox(height: 20.0,),
+                            Center(
+                              child:  GestureDetector(
+                                onTap: (){
+                                  // getSensorInfo();
+                                },
+                                child: Text(
+                                  'STATE OF APPLE',
+                                  style: TextStyle(
+                                    fontSize: 30.0,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+
+                            const SizedBox(height: 20.0,),
+
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              // mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  decoration:  BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(.5),
+                                        blurRadius: 20.0,
+                                        spreadRadius: -4.0,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Card(
+                                    color: Color(ethyleneColor),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(25.0),
+                                    ),
+                                    child: SizedBox(
+                                      width: 170.0,
+                                      height: 170.0,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(left: 20.0, top: 10.0),
+
+                                        child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [
+
+                                              Text(
+                                                'Ethylene',
+                                                style: TextStyle(
+                                                  fontSize: 20.0,
+                                                ),
+                                              ),
+
+                                              const SizedBox(height: 2.0,),
+                                              Text(
+                                                '${ethylene}%',
+                                                style: TextStyle(
+                                                  fontSize: 35.0,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+
+                                              const SizedBox(height: 10.0,),
+
+                                              SizedBox(
+                                                child: Image.asset('assets/images/ethylene.png'),
+                                                height: 35.0,
+                                                width: 35.0,
+                                              ),
+
+                                              const SizedBox(height: 8.0,),
+                                              RichText(
+                                                text: const TextSpan(
+                                                  children:[
+                                                    TextSpan(
+                                                        text: "Condition : ",
+                                                        style:  TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 12.0,
+                                                          fontWeight: FontWeight.w300,
+                                                        )
+                                                    ),
+                                                    TextSpan(
+                                                      text: "Good",
+                                                      style:  TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 12.0,
+                                                        fontWeight: FontWeight.w500,
+                                                      ),
+
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              const SizedBox(height: 2.0,),
+                                              RichText(
+                                                text: const TextSpan(
+                                                  children:[
+                                                    TextSpan(
+                                                        text: "Threshold : ",
+                                                        style:  TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 12.0,
+                                                          fontWeight: FontWeight.w300,
+                                                        )
+                                                    ),
+                                                    TextSpan(
+                                                      text: "20.59%",
+                                                      style:  TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 12.0,
+                                                        fontWeight: FontWeight.w500,
+                                                      ),
+
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+
+                                            ]
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+
+                                const SizedBox(width: 20.0,),
+
+                                Container(
+                                  decoration:  BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(.5),
+                                        blurRadius: 20.0,
+                                        spreadRadius: -4.0,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Card(
+                                    color: Color(moistureColor),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(25.0),
+                                    ),
+                                    child: SizedBox(
+                                      width: 170.0,
+                                      height: 170.0,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(left: 20.0, top: 10.0),
+
+                                        child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [
+
+                                              const Text(
+                                                'Moisture',
+                                                style: TextStyle(
+                                                  fontSize: 20.0,
+                                                ),
+                                              ),
+
+                                              const SizedBox(height: 2.0,),
+                                              Text(
+                                                "${moisture}%",
+                                                style: TextStyle(
+                                                  fontSize: 35.0,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+
+                                              const SizedBox(height: 10.0,),
+
+                                              SizedBox(
+                                                child: Image.asset('assets/images/moisture.png'),
+                                                height: 35.0,
+                                                width: 35.0,
+                                              ),
+
+                                              const SizedBox(height: 8.0,),
+                                              RichText(
+                                                text: const TextSpan(
+                                                  children:[
+                                                    TextSpan(
+                                                        text: "Condition : ",
+                                                        style:  TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 12.0,
+                                                          fontWeight: FontWeight.w300,
+                                                        )
+                                                    ),
+                                                    TextSpan(
+                                                      text: "Good",
+                                                      style:  TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 12.0,
+                                                        fontWeight: FontWeight.w500,
+                                                      ),
+
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              const SizedBox(height: 2.0,),
+                                              RichText(
+                                                text: const TextSpan(
+                                                  children:[
+                                                    TextSpan(
+                                                        text: "Threshold : ",
+                                                        style:  TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 12.0,
+                                                          fontWeight: FontWeight.w300,
+                                                        )
+                                                    ),
+                                                    TextSpan(
+                                                      text: "35.87%",
+                                                      style:  TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 12.0,
+                                                        fontWeight: FontWeight.w500,
+                                                      ),
+
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+
+                                            ]
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+
+                              ],
+                            ),
+
+                            const SizedBox(height: 30.0,),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              // mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  decoration:  BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(.5),
+                                        blurRadius: 20.0,
+                                        spreadRadius: -4.0,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Card(
+                                    color: Color(carbonMonoColor),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(25.0),
+                                    ),
+                                    child: SizedBox(
+                                      width: 170.0,
+                                      height: 170.0,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(left: 20.0, top: 10.0),
+
+                                        child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [
+
+                                              const Text(
+                                                'Carbon Mono',
+                                                style: TextStyle(
+                                                  fontSize: 20.0,
+                                                ),
+                                              ),
+
+                                              const SizedBox(height: 2.0,),
+                                              Text(
+                                                "${carbonMono}%",
+                                                style: TextStyle(
+                                                  fontSize: 35.0,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+
+                                              const SizedBox(height: 10.0,),
+
+                                              SizedBox(
+                                                child: Image.asset('assets/images/co.png'),
+                                                height: 35.0,
+                                                width: 35.0,
+                                              ),
+
+                                              const SizedBox(height: 8.0,),
+                                              RichText(
+                                                text: const TextSpan(
+                                                  children:[
+                                                    TextSpan(
+                                                        text: "Condition : ",
+                                                        style:  TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 12.0,
+                                                          fontWeight: FontWeight.w300,
+                                                        )
+                                                    ),
+                                                    TextSpan(
+                                                      text: "Good",
+                                                      style:  TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 12.0,
+                                                        fontWeight: FontWeight.w500,
+                                                      ),
+
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              const SizedBox(height: 2.0,),
+                                              RichText(
+                                                text: const TextSpan(
+                                                  children:[
+                                                    TextSpan(
+                                                        text: "Threshold : ",
+                                                        style:  TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 12.0,
+                                                          fontWeight: FontWeight.w300,
+                                                        )
+                                                    ),
+                                                    TextSpan(
+                                                      text: "07.51%",
+                                                      style:  TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 12.0,
+                                                        fontWeight: FontWeight.w500,
+                                                      ),
+
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+
+                                            ]
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+
+                                const SizedBox(width: 20.0,),
+
+                                Container(
+
+                                  decoration:  BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(.5),
+                                        blurRadius: 20.0,
+                                        spreadRadius: -4.0,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Card(
+                                    color: Color(methaneColor),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(25.0),
+                                    ),
+                                    child: SizedBox(
+                                      width: 170.0,
+                                      height: 170.0,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(left: 20.0, top: 10.0),
+
+                                        child:  Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [
+
+                                              const Text(
+                                                'Methane',
+                                                style: TextStyle(
+                                                  fontSize: 20.0,
+                                                ),
+                                              ),
+
+                                              const SizedBox(height: 2.0,),
+                                              Text(
+                                                "${methane}%",
+                                                style: TextStyle(
+                                                  fontSize: 35.0,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+
+                                              const SizedBox(height: 10.0,),
+
+                                              SizedBox(
+                                                child: Image.asset('assets/images/smoke.png'),
+                                                height: 35.0,
+                                                width: 35.0,
+                                              ),
+
+                                              const SizedBox(height: 8.0,),
+                                              RichText(
+                                                text: const TextSpan(
+                                                  children:[
+                                                    TextSpan(
+                                                        text: "Condition : ",
+                                                        style:  TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 12.0,
+                                                          fontWeight: FontWeight.w300,
+                                                        )
+                                                    ),
+                                                    TextSpan(
+                                                      text: "Bad",
+                                                      style:  TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 12.0,
+                                                        fontWeight: FontWeight.w500,
+                                                      ),
+
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              const SizedBox(height: 2.0,),
+                                              RichText(
+                                                text: const TextSpan(
+                                                  children:[
+                                                    TextSpan(
+                                                        text: "Threshold : ",
+                                                        style:  TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 12.0,
+                                                          fontWeight: FontWeight.w300,
+                                                        )
+                                                    ),
+                                                    TextSpan(
+                                                      text: "12.50%",
+                                                      style:  TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 12.0,
+                                                        fontWeight: FontWeight.w500,
+                                                      ),
+
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+
+                                            ]
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+
+                              ],
+                            ),
+
+                            const SizedBox(height: 20.0,),
+                            SizedBox(
+                              height: 50.0,
+                              width: 200.0,
+                              child: ElevatedButton(
+
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.green, // background (button) color
+                                  foregroundColor: Colors.white,
+                                  // foreground (text) color
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'REFRESH',
+                                  style: TextStyle(
+                                    fontSize: 22.0,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                                onPressed: (){
+                                  Get.to(()=>RefreshData());
+                                },
+                              ),
+                            ),
+
+                            const SizedBox(height: 10.0,),
+                            Text(
+                              'Last data updated: 12 sec ago',
+                            ),
+                          ],
+                        );
+
+                      }
                   },
-                  elevation: 0.0,
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0)
-                  ),
-                  child: const Text(
-                    'Sign Up',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18.0,
-                    ),
-                  ),
-
                 ),
-              ),
 
+              )
+              // ElevatedButton(onPressed: checkDB, child: Text('press')),
             ],
           ),
         ),
@@ -115,6 +601,3 @@ class _SignUpScreenState extends State<SignUpScreen>{
     );
   }
 }
-
-
-

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'welcome.dart';
+import 'globalVariables.dart' as global;
 
 class SideDrawer extends StatelessWidget{
   @override
@@ -89,6 +90,7 @@ class SideDrawer extends StatelessWidget{
                   ),
                   TextButton(
                     onPressed: () async {
+                      global.currentUser = '';
                       await FirebaseAuth.instance.signOut();
                       Navigator.of(context).pushAndRemoveUntil(CupertinoPageRoute(builder: (context) => WelcomeScreen()),(_) => false,);
 
@@ -98,7 +100,7 @@ class SideDrawer extends StatelessWidget{
                     ),
                   ),
                 ],
-                shape: RoundedRectangleBorder(
+                shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10.0))),
                 backgroundColor: Colors.green,
               ),
