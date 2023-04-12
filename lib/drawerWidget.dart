@@ -2,6 +2,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fruits/home.dart';
+import 'package:get/get.dart';
 
 import 'welcome.dart';
 import 'globalVariables.dart' as global;
@@ -15,34 +17,51 @@ class SideDrawer extends StatelessWidget{
         // Important: Remove any padding from the ListView.
         padding: EdgeInsets.zero,
         children: [
-          const SizedBox(
-            height: 120.0,
+          SizedBox(
+            height: 140.0,
             child: DrawerHeader(
 
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.green,
               ),
-              child: Text(
-                  'User profile',
-                style: TextStyle(
-                  fontWeight: FontWeight.normal,
-                  fontSize: 25.0,
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    'Joel C Raju',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 22.0,
+                    ),
+                  ),
+                  SizedBox(height: 5.0,),
+                  Text(
+                      global.userName,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.normal,
+                      fontSize: 15.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
 
           const SizedBox(height: 20.0,),
           ListTile(
-            leading: const Icon(Icons.home_outlined, size: 35.0, color: Colors.black,),
+            leading: const Icon(Icons.home_outlined, size: 35.0, color: Colors.grey,),
             title: const Text(
                 'Home',
                 style: TextStyle(
-                  fontSize: 25.0,
+                  fontSize: 22.0,
                   fontWeight: FontWeight.w400,
+                  color: Colors.grey,
                 ),
             ),
             onTap: () {
+              Get.to(()=>MyHomePage());
               // Update the state of the app.
               // ...
             },
@@ -50,12 +69,13 @@ class SideDrawer extends StatelessWidget{
 
           const SizedBox(height: 10.0,),
           ListTile(
-            leading: const Icon(Icons.person_2_outlined, size: 35.0, color: Colors.black,),
+            leading: const Icon(Icons.person_2_outlined, size: 35.0, color: Colors.grey,),
             title: const Text(
               'Profile',
               style: TextStyle(
-                fontSize: 25.0,
+                fontSize: 22.0,
                 fontWeight: FontWeight.w400,
+                color: Colors.grey,
               ),
             ),
             onTap: () {
@@ -66,12 +86,13 @@ class SideDrawer extends StatelessWidget{
 
           const SizedBox(height: 10.0,),
           ListTile(
-            leading: const Icon(Icons.logout_outlined, size: 35.0, color: Colors.black,),
+            leading: const Icon(Icons.logout_outlined, size: 35.0, color: Colors.grey,),
             title: const Text(
               'Sign Out',
               style: TextStyle(
                 fontSize: 25.0,
                 fontWeight: FontWeight.w400,
+                color: Colors.grey,
               ),
             ),
             onTap: () => showDialog<String>(
@@ -104,13 +125,7 @@ class SideDrawer extends StatelessWidget{
                     borderRadius: BorderRadius.all(Radius.circular(10.0))),
                 backgroundColor: Colors.green,
               ),
-
-              ),
-                // await FirebaseAuth.instance.signOut();
-                // Navigator.of(context).pushAndRemoveUntil(CupertinoPageRoute(builder: (context) => WelcomeScreen()),(_) => false,);
-                // },
-              // Update the state of the app.
-              // ...
+            ),
 
           ),
         ],

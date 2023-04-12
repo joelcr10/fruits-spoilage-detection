@@ -9,6 +9,8 @@ import 'test.dart';
 import 'package:get/get.dart';
 
 
+//todo: take values from previous screen and create a dynamic page
+
 String ethylene = 'NaN';
 String moisture = 'NaN';
 String methane = 'NaN';

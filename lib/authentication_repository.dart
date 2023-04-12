@@ -26,16 +26,19 @@ class AuthenticationRepository extends GetxController {
   }
 
   _setInitialScreen(User? user) {
-    print('inside initial screen $user');
+    // print('inside initial screen $user');
     user == null ? Get.offAll(() => WelcomeScreen()) : Get.offAll(() => const MyHomePage());
 
     if(user==null){
       Get.offAll(() => WelcomeScreen());
     }
     else{
-      CurrentUser currentUser = CurrentUser();
-      currentUser.setCurrentUserId = user.uid;
-      print('current user (auth screen) : ${global.currentUser}');
+      // CurrentUser currentUser = CurrentUser();
+      // currentUser.setCurrentUserId = user.uid; //this sets the global.currentUser
+      global.currentUser = user.uid;
+      global.userName = user.email!;
+
+      // print('current user (auth screen) : ${global.currentUser} and ${global.userName}');
       Get.offAll(() => const MyHomePage());
     }
   }

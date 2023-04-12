@@ -14,6 +14,10 @@ class LoginPage extends StatefulWidget{
   State<LoginPage> createState() => LoginPageState();
 }
 
+
+//TODO: perform fom validation in login form
+//TODO: add error message for incorrrect password or username
+
 class LoginPageState extends State<LoginPage>{
 
   final emailController = TextEditingController();

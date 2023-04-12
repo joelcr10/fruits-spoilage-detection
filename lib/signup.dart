@@ -10,6 +10,10 @@ import 'login.dart';
 import 'package:fruits/Controller/signup_controller.dart';
 
 
+
+//todo: perform form validation in signup form
+//todo: failed to sign up error message
+
 class SignUpScreen extends StatelessWidget{
   @override
   Widget build(BuildContext context){
